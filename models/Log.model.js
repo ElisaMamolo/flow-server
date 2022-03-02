@@ -9,7 +9,7 @@ const logSchema = new Schema(
     comments: String,
     measurements: [
       {
-        timestamp: true, //see if this needs to change
+        timestamp: Date, //see if this needs to change
         ph: Number,
         temperature: Number,
         ammonia: Number,
