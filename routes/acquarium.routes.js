@@ -13,13 +13,36 @@ router.get("/", (req, res, next) => {
 });
 
 router.post("/", (req, res, next) => {
-  console.log(req.body);
-  //TODO: add user property with user id
-  const { name, liters, started, logs } = req.body;
+  const { user, name, liters, started, logs } = req.body;
 
-  Acquarium.create({ name, liters, started, logs: [] })
+  Acquarium.create({ user, name, liters, started, logs: [] })
     .then((response) => res.json(response))
     .catch((err) => res.json(err));
+});
+
+router.put("/:id", (req, res, next) => {
+  const { id } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    res.status(400).json({ message: "Specified id is not valid" });
+    return;
+  }
+
+  Project.findByIdAndUpdate(id, req.body, { new: true })
+    .then((updatedAcquarium) => res.json(updatedAcquarium))
+    .catch((error) => res.json(error));
+});
+
+router.delete("/:id", (req, res, next) => {
+  const { id } = req.params;
+
+  Acquarium.findByIdAndRemove(id)
+    .then(() =>
+      res.json({
+        message: `Item with ${id} is removed successfully.`,
+      })
+    )
+    .catch((error) => res.json(error));
 });
 
 module.exports = router;
