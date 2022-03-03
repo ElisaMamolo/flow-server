@@ -12,6 +12,14 @@ router.get("/", (req, res, next) => {
     .catch((err) => res.json(err));
 });
 
+//get by id for the edit page
+router.get("/:id", (req, res, next) => {
+  const { id } = req.params;
+  Acquarium.findById(id)
+    .then((acquarium) => res.json(acquarium))
+    .catch((err) => res.json(err));
+});
+
 router.post("/", (req, res, next) => {
   const { user, name, liters, started, logs } = req.body;
 
@@ -28,7 +36,7 @@ router.put("/:id", (req, res, next) => {
     return;
   }
 
-  Project.findByIdAndUpdate(id, req.body, { new: true })
+  Acquarium.findByIdAndUpdate(id, req.body, { new: true })
     .then((updatedAcquarium) => res.json(updatedAcquarium))
     .catch((error) => res.json(error));
 });
