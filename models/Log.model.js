@@ -3,9 +3,6 @@ const { Schema, model } = require("mongoose");
 const logSchema = new Schema(
   {
     acquarium: { type: Schema.Types.ObjectId, ref: "Acquarium" },
-    name: String,
-    liters: Number,
-    started: Date,
     comments: String,
     measurements: [
       {
