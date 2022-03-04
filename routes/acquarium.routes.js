@@ -10,7 +10,6 @@ router.get("/", (req, res, next) => {
   Acquarium.find()
     .populate("logs")
     .then((acquariums) => {
-      console.log("acquariums :>> ", acquariums);
       res.json(acquariums);
     })
     .catch((err) => res.json(err));

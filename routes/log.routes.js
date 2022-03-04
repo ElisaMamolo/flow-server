@@ -40,16 +40,22 @@ router.put("/:id", (req, res, next) => {
     .catch((error) => res.json(error));
 });
 
-router.delete("/:id", (req, res, next) => {
-  const { id } = req.params;
+router.delete("/:logid/:acquariumid", async (req, res, next) => {
+  const { logid, acquariumid } = req.params;
+  try {
+    await Log.findByIdAndRemove(logid);
 
-  Log.findByIdAndRemove(id)
-    .then(() =>
-      res.json({
-        message: `Item with ${id} is removed successfully.`,
-      })
-    )
-    .catch((error) => res.json(error));
+    //call acquarium and push id of this created log
+    //only then can use populate on acquarium Logs
+    await Acquarium.findByIdAndUpdate(acquariumid, {
+      $pull: { logs: logid },
+    });
+    res.status(201).json({
+      message: `log with ${logid} is removed successfully.`,
+    });
+  } catch (error) {
+    res.status(500).json(error);
+  }
 });
 
 module.exports = router;
