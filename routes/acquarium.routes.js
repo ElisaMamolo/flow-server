@@ -8,7 +8,11 @@ const User = require("../models/User.model");
 
 router.get("/", (req, res, next) => {
   Acquarium.find()
-    .then((acquariums) => res.json(acquariums))
+    .populate("logs")
+    .then((acquariums) => {
+      console.log("acquariums :>> ", acquariums);
+      res.json(acquariums);
+    })
     .catch((err) => res.json(err));
 });
 

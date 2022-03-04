@@ -5,17 +5,26 @@ const mongoose = require("mongoose");
 
 const Log = require("../models/Log.model");
 const Acquarium = require("../models/Acquarium.model");
+const { findById } = require("../models/Log.model");
 
-router.post("/", (req, res, next) => {
-  const { acquarium, comments, measurements } = req.body;
-
-  Log.create({
-    acquarium,
-    comments,
-    measurements,
-  })
-    .then((response) => res.json(response))
-    .catch((err) => res.json(err));
+router.post("/", async (req, res, next) => {
+  try {
+    const { acquarium, comments, measurements } = req.body;
+    let newLog = await Log.create({
+      acquarium,
+      comments,
+      measurements,
+    });
+    console.log(newLog._id);
+    //call acquarium and push id of this created log
+    //only then can use populate on acquarium Logs
+    await Acquarium.findByIdAndUpdate(acquarium, {
+      $push: { logs: newLog._id },
+    });
+    res.status(201).json(newLog);
+  } catch (error) {
+    res.status(500).json(error);
+  }
 });
 
 router.put("/:id", (req, res, next) => {
