@@ -20,6 +20,7 @@ router.get("/:id", async (req, res, next) => {
 router.post("/", async (req, res, next) => {
   try {
     const { acquarium, comments, measurements } = req.body;
+    console.log(req.body);
     let newLog = await Log.create({
       acquarium,
       comments,
@@ -38,6 +39,11 @@ router.post("/", async (req, res, next) => {
 
 router.put("/:logid/:acquariumid", (req, res, next) => {
   const { logid, acquariumid } = req.params;
+  const measurementsObject = req.body.measurements[0];
+  if (measurementsObject.timestamp === null) {
+    res.status(400).json({ message: "Date is required" });
+    return;
+  }
 
   if (!mongoose.Types.ObjectId.isValid(logid)) {
     res.status(400).json({ message: "Specified id is not valid" });

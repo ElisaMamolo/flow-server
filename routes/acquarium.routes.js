@@ -25,6 +25,12 @@ router.get("/:id", (req, res, next) => {
 
 router.post("/", (req, res, next) => {
   const { user, name, liters, started, logs } = req.body;
+  if (name === "" || liters === "" || started === "") {
+    res
+      .status(400)
+      .json({ message: "Name, liters and start date must be provided" });
+    return;
+  }
 
   Acquarium.create({ user, name, liters, started, logs: [] })
     .then((response) => res.json(response))
@@ -33,6 +39,13 @@ router.post("/", (req, res, next) => {
 
 router.put("/:id", (req, res, next) => {
   const { id } = req.params;
+  const { user, name, liters, started, logs } = req.body;
+  if (name === "" || liters === "" || started === "") {
+    res
+      .status(400)
+      .json({ message: "Name, liters and start date must be provided" });
+    return;
+  }
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
     res.status(400).json({ message: "Specified id is not valid" });
