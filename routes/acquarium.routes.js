@@ -19,6 +19,7 @@ router.get("/", (req, res, next) => {
 router.get("/:id", (req, res, next) => {
   const { id } = req.params;
   Acquarium.findById(id)
+    .populate("logs")
     .then((acquarium) => res.json(acquarium))
     .catch((err) => res.json(err));
 });
