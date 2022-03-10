@@ -20,7 +20,27 @@ router.get("/:id", async (req, res, next) => {
 router.post("/", async (req, res, next) => {
   try {
     const { acquarium, comments, measurements } = req.body;
-    console.log(req.body);
+    const measurementsObject = req.body.measurements[0];
+    if (measurementsObject.timestamp === null) {
+      res.status(400).json({ message: "Date is required" });
+      return;
+    }
+
+    if (
+      measurementsObject.ph < 0 ||
+      measurementsObject.temperature < 0 ||
+      measurementsObject.ammonia < 0 ||
+      measurementsObject.nitrite < 0 ||
+      measurementsObject.nitrate < 0 ||
+      measurementsObject.salinity < 0 ||
+      measurementsObject.phosphate < 0 ||
+      measurementsObject.salinity < 0 ||
+      measurementsObject.alkalinity < 0 ||
+      measurementsObject.calcium < 0
+    ) {
+      res.status(400).json({ message: "You must input only positive numbers" });
+      return;
+    }
     let newLog = await Log.create({
       acquarium,
       comments,
@@ -42,6 +62,22 @@ router.put("/:logid/:acquariumid", (req, res, next) => {
   const measurementsObject = req.body.measurements[0];
   if (measurementsObject.timestamp === null) {
     res.status(400).json({ message: "Date is required" });
+    return;
+  }
+
+  if (
+    measurementsObject.ph < 0 ||
+    measurementsObject.temperature < 0 ||
+    measurementsObject.ammonia < 0 ||
+    measurementsObject.nitrite < 0 ||
+    measurementsObject.nitrate < 0 ||
+    measurementsObject.salinity < 0 ||
+    measurementsObject.phosphate < 0 ||
+    measurementsObject.salinity < 0 ||
+    measurementsObject.alkalinity < 0 ||
+    measurementsObject.calcium < 0
+  ) {
+    res.status(400).json({ message: "You must input only positive numbers" });
     return;
   }
 
