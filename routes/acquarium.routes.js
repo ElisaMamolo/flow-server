@@ -8,11 +8,11 @@ const User = require("../models/User.model");
 
 router.get("/", (req, res, next) => {
   let userid = req.query.userid;
-  if (req.query.userid.length > 0 || req.query.userid !== undefined) {
+  if (userid.length > 0 || userid !== undefined || userid !== null) {
     Acquarium.find({ user: userid })
       .populate("logs")
       .then((acquariums) => {
-        console.log("filtered " + acquariums);
+        //console.log("filtered " + acquariums);
         res.json(acquariums);
       })
       .catch((err) => res.json(err));
