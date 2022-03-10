@@ -7,12 +7,23 @@ const Log = require("../models/Log.model");
 const User = require("../models/User.model");
 
 router.get("/", (req, res, next) => {
-  Acquarium.find()
-    .populate("logs")
-    .then((acquariums) => {
-      res.json(acquariums);
-    })
-    .catch((err) => res.json(err));
+  let userid = req.query.userid;
+  if (req.query.userid.length > 0 || req.query.userid !== undefined) {
+    Acquarium.find({ user: userid })
+      .populate("logs")
+      .then((acquariums) => {
+        console.log("filtered " + acquariums);
+        res.json(acquariums);
+      })
+      .catch((err) => res.json(err));
+  } else {
+    Acquarium.find()
+      .populate("logs")
+      .then((acquariums) => {
+        res.json(acquariums);
+      })
+      .catch((err) => res.json(err));
+  }
 });
 
 //get by id for the edit page
